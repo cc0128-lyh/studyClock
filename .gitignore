@@ -3,7 +3,9 @@ dist/
 dist-electron/
 data/
 wallpapers/
+uploads/
 *.log
+*.err
 
 # IDE
 .idea/
@@ -17,3 +19,7 @@ Thumbs.db
 # Backend
 backend/**/target/
 backend/**/*.jar
+
+# Temp docs
+*.docx
+~$*

@@ -36,7 +36,7 @@ const avatarBgStyle = computed(() => {
   if (userStore.avatarUrl) {
     return { backgroundImage: `url(${userStore.avatarUrl})`, backgroundSize: 'cover' }
   }
-  return { background: 'var(--accent-color)' }
+  return { background: '#fff' }
 })
 
 function updateTime() {
@@ -70,8 +70,10 @@ function quit() {
   align-items: center;
   justify-content: space-between;
   padding: 0 1.5rem;
-  background: rgba(0,0,0,0.4);
-  backdrop-filter: blur(12px);
+  background: var(--glass-bg);
+  backdrop-filter: blur(24px) saturate(1.4);
+  -webkit-backdrop-filter: blur(24px) saturate(1.4);
+  border-bottom: 1px solid var(--glass-border);
   z-index: 100;
   -webkit-app-region: drag;
 }
@@ -102,6 +104,7 @@ function quit() {
   font-weight: 600;
   overflow: hidden;
   flex-shrink: 0;
+  color: #0a0a0a;
 }
 .mini-avatar img { width: 100%; height: 100%; object-fit: cover; }
 .user-name { font-size: 0.85rem; opacity: 0.85; max-width: 100px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }

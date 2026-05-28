@@ -136,8 +136,8 @@ function startNext() {
   transition: all 0.2s;
 }
 .action-btn.primary {
-  background: var(--accent-color);
-  color: #fff;
+  background: #fff;
+  color: #0a0a0a;
 }
 .action-btn.primary:hover { opacity: 0.85; }
 .action-btn.secondary {

@@ -114,8 +114,8 @@ h2 { font-weight: 400; letter-spacing: 0.1em; margin-bottom: 2rem; }
   flex-wrap: wrap;
 }
 .today-card {
-  background: linear-gradient(135deg, rgba(255,255,255,0.08), rgba(255,255,255,0.03));
-  border: 1px solid rgba(255,255,255,0.15);
+  background: var(--panel-bg);
+  border: 1px solid var(--border-color);
   border-radius: 18px;
   padding: 1.5rem 2.2rem;
   min-width: 140px;
@@ -123,9 +123,9 @@ h2 { font-weight: 400; letter-spacing: 0.1em; margin-bottom: 2rem; }
   transition: all 0.2s;
 }
 .today-card:hover {
-  border-color: var(--accent-color);
+  border-color: rgba(255,255,255,0.3);
   transform: translateY(-2px);
-  box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.4);
 }
 .tc-name {
   font-size: 1rem;
@@ -136,7 +136,7 @@ h2 { font-weight: 400; letter-spacing: 0.1em; margin-bottom: 2rem; }
   font-size: 2rem;
   font-weight: 300;
   font-family: var(--font-mono);
-  color: var(--accent-color);
+  color: #fff;
 }
 .tc-count {
   font-size: 0.8rem;
@@ -168,15 +168,16 @@ h2 { font-weight: 400; letter-spacing: 0.1em; margin-bottom: 2rem; }
   margin-top: 1.5rem;
   padding: 0.7rem 2rem;
   background: transparent;
-  border: 1px solid var(--accent-color);
+  border: 1px solid rgba(255,255,255,0.25);
   border-radius: 20px;
-  color: var(--accent-color);
+  color: rgba(255,255,255,0.7);
   font-size: 0.9rem;
   cursor: pointer;
   transition: all 0.2s;
 }
 .detail-btn:hover {
-  background: var(--accent-color);
+  background: rgba(255,255,255,0.08);
+  border-color: rgba(255,255,255,0.4);
   color: #fff;
 }
 </style>

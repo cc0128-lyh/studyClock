@@ -60,9 +60,9 @@ const props = withDefaults(defineProps<{
 })
 
 const colors = [
-  '#4fc3f7', '#ff8a65', '#81c784', '#ba68c8',
-  '#ffd54f', '#4dd0e1', '#a1887f', '#90a4ae',
-  '#e57373', '#7986cb'
+  '#ffffff', '#d4d4d4', '#a8a8a8', '#808080',
+  '#b0b0b0', '#c8c8c8', '#e0e0e0', '#969696',
+  '#bcbcbc', '#6e6e6e'
 ]
 
 const total = computed(() => props.data.reduce((s, d) => s + d.value, 0))

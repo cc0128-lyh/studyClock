@@ -81,12 +81,13 @@ h2 {
 .subject-form input:focus { border-color: var(--accent-color); }
 .btn-save-sm {
   padding: 0.6rem 1.2rem;
-  background: var(--accent-color);
+  background: #fff;
   border: none;
   border-radius: 10px;
-  color: #fff;
+  color: #0a0a0a;
   cursor: pointer;
   white-space: nowrap;
+  font-weight: 500;
 }
 
 .subject-list {

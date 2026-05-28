@@ -178,11 +178,12 @@ onMounted(() => {
 }
 .btn-save {
   padding: 0.5rem 1.2rem;
-  background: var(--accent-color);
+  background: #fff;
   border: none;
   border-radius: 8px;
-  color: #fff;
+  color: #0a0a0a;
   cursor: pointer;
+  font-weight: 500;
 }
 .shortcut-item {
   display: flex;

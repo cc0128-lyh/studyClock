@@ -168,7 +168,7 @@ const avatarStyle = computed(() => {
   if (userStore.avatarUrl) {
     return { backgroundImage: `url(${userStore.avatarUrl})`, backgroundSize: 'cover', backgroundPosition: 'center' }
   }
-  return { background: 'var(--accent-color)' }
+  return { background: '#fff' }
 })
 
 function triggerUpload() {
@@ -332,12 +332,13 @@ h2 { font-weight: 400; letter-spacing: 0.1em; margin-bottom: 1.5rem; text-align:
 }
 .btn-save-sm {
   padding: 0.6rem 1.2rem;
-  background: var(--accent-color);
+  background: #fff;
   border: none;
   border-radius: 10px;
-  color: #fff;
+  color: #0a0a0a;
   cursor: pointer;
   white-space: nowrap;
+  font-weight: 500;
 }
 
 /* Wallpaper */
@@ -375,7 +376,7 @@ h2 { font-weight: 400; letter-spacing: 0.1em; margin-bottom: 1.5rem; text-align:
   transition: all 0.2s;
 }
 .dur-btn:hover { background: rgba(255,255,255,0.1); }
-.dur-btn.active { background: var(--accent-color); border-color: var(--accent-color); }
+.dur-btn.active { background: #fff; color: #0a0a0a; border-color: #fff; }
 
 /* Subject entry */
 .nav-entry-btn {
@@ -456,6 +457,6 @@ h2 { font-weight: 400; letter-spacing: 0.1em; margin-bottom: 1.5rem; text-align:
   left: 2px;
   transition: transform 0.2s;
 }
-.toggle-input:checked + .toggle-switch { background: var(--accent-color); }
+.toggle-input:checked + .toggle-switch { background: rgba(255,255,255,0.3); }
 .toggle-input:checked + .toggle-switch::after { transform: translateX(16px); }
 </style>

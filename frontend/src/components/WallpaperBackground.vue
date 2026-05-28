@@ -16,13 +16,13 @@ onMounted(() => {
 
 const bgStyleComputed = computed(() => {
   const wp = wallpaperStore.activeWallpaper
-  const overlay = 'linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3))'
+  const overlay = 'linear-gradient(rgba(10,10,10,0.5), rgba(10,10,10,0.7))'
 
   if (!wp) {
-    return { background: '#1a1a2e' }
+    return { background: '#0a0a0a' }
   }
   if (wp.type === 'COLOR') {
-    return { background: wp.bgColor || '#1a1a2e' }
+    return { background: wp.bgColor || '#0a0a0a' }
   }
   // IMAGE type: overlay gradient + image
   return {

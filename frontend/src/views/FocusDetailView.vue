@@ -149,7 +149,7 @@ watch(range, () => fetchData())
   position: absolute;
   top: 3px;
   bottom: 3px;
-  background: var(--accent-color);
+  background: rgba(255,255,255,0.15);
   border-radius: 17px;
   transition: left 0.25s ease;
   z-index: 0;

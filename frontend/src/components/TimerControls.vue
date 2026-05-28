@@ -137,16 +137,16 @@ function handleStart() {
 }
 .preset-btn {
   padding: 0.5rem 1.2rem;
-  border: 1px solid rgba(255,255,255,0.3);
+  border: 1px solid rgba(255,255,255,0.2);
   border-radius: 20px;
   background: transparent;
-  color: #fff;
+  color: rgba(255,255,255,0.7);
   cursor: pointer;
   font-size: 0.9rem;
   transition: all 0.2s;
 }
-.preset-btn:hover { background: rgba(255,255,255,0.1); }
-.preset-btn.active { background: var(--accent-color); border-color: var(--accent-color); }
+.preset-btn:hover { background: rgba(255,255,255,0.08); color: #fff; }
+.preset-btn.active { background: #fff; color: #0a0a0a; border-color: #fff; }
 
 .custom-wrapper {
   position: relative;
@@ -213,7 +213,7 @@ function handleStart() {
   text-align-last: center;
 }
 .subject-dropdown:focus { border-color: var(--accent-color); }
-.subject-dropdown option { background: #1a1a2e; color: #fff; }
+.subject-dropdown option { background: #141414; color: #fff; }
 
 .actions { display: flex; gap: 1rem; justify-content: center; }
 .action-btn {
@@ -225,8 +225,9 @@ function handleStart() {
   transition: all 0.2s;
   letter-spacing: 0.1em;
 }
-.action-btn.start, .action-btn.resume { background: var(--accent-color); color: #fff; }
+.action-btn.start, .action-btn.resume { background: #fff; color: #0a0a0a; }
 .action-btn.start:hover, .action-btn.resume:hover { opacity: 0.85; }
-.action-btn.pause { background: rgba(255,255,255,0.2); color: #fff; }
-.action-btn.cancel { background: transparent; color: rgba(255,255,255,0.6); border: 1px solid rgba(255,255,255,0.3); }
+.action-btn.pause { background: rgba(255,255,255,0.12); color: #fff; }
+.action-btn.cancel { background: transparent; color: rgba(255,255,255,0.5); border: 1px solid rgba(255,255,255,0.15); }
+.action-btn.cancel:hover { border-color: rgba(255,255,255,0.4); color: #fff; }
 </style>
