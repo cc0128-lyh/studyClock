@@ -7,14 +7,28 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted } from 'vue'
+import { computed, onMounted, onUnmounted } from 'vue'
 import { useWallpaperStore } from '@/stores/wallpaper'
 import { resolveBackendUrl } from '@/api'
 
 const wallpaperStore = useWallpaperStore()
 
+let retryTimer: ReturnType<typeof setTimeout> | null = null
+
+async function loadActive(retries = 10) {
+  await wallpaperStore.fetchActive()
+  if (!wallpaperStore.activeWallpaper && retries > 0) {
+    // 后端可能尚未就绪，延迟重试
+    retryTimer = setTimeout(() => loadActive(retries - 1), 2000)
+  }
+}
+
 onMounted(() => {
-  wallpaperStore.fetchActive()
+  loadActive()
+})
+
+onUnmounted(() => {
+  if (retryTimer) clearTimeout(retryTimer)
 })
 
 const bgStyleComputed = computed(() => {
