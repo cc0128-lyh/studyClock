@@ -1,0 +1,19 @@
+node_modules/
+dist/
+dist-electron/
+data/
+wallpapers/
+*.log
+
+# IDE
+.idea/
+*.iml
+.vscode/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Backend
+backend/**/target/
+backend/**/*.jar

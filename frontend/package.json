@@ -1,0 +1,55 @@
+{
+  "name": "study-clock",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Study Clock - Focus Timer Desktop App",
+  "main": "electron/main.cjs",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "electron:dev": "concurrently \"vite\" \"wait-on http://localhost:5173 && electron .\"",
+    "electron:build": "vite build && electron-builder",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "axios": "^1.7.2",
+    "pinia": "^2.1.7",
+    "vue": "^3.4.27",
+    "vue-router": "^4.3.2"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^5.0.4",
+    "concurrently": "^8.2.2",
+    "electron": "^30.0.8",
+    "electron-builder": "^24.13.3",
+    "typescript": "^5.4.5",
+    "vite": "^5.2.12",
+    "wait-on": "^7.2.0"
+  },
+  "build": {
+    "appId": "com.studyclock.app",
+    "productName": "StudyClock",
+    "directories": {
+      "output": "dist-electron"
+    },
+    "files": [
+      "dist/**/*",
+      "electron/**/*"
+    ],
+    "win": {
+      "target": "nsis",
+      "icon": "public/icon.png"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "installerSidebar": null
+    },
+    "extraResources": [
+      {
+        "from": "../backend/target/study-clock-bootstrap-1.0.0.jar",
+        "to": "backend/study-clock.jar"
+      }
+    ]
+  }
+}
