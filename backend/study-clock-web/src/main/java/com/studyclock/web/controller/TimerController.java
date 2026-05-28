@@ -39,8 +39,15 @@ public class TimerController {
     }
 
     @PostMapping("/{id}/complete")
-    public ApiResult<FocusSessionDTO> complete(@PathVariable Long id, @RequestParam Long actualSeconds) {
-        return ApiResult.success(service.completeSession(id, actualSeconds));
+    public ApiResult<FocusSessionDTO> complete(
+            @PathVariable Long id,
+            @RequestParam Long actualSeconds,
+            @RequestParam(required = false) Boolean examMode,
+            @RequestParam(required = false) String examPaperName,
+            @RequestParam(required = false) String wrongQuestions,
+            @RequestParam(required = false) Integer examTotalScore,
+            @RequestParam(required = false) Integer examScore) {
+        return ApiResult.success(service.completeSession(id, actualSeconds, examMode, examPaperName, wrongQuestions, examTotalScore, examScore));
     }
 
     @PostMapping("/{id}/cancel")
@@ -61,6 +68,18 @@ public class TimerController {
             return ApiResult.success(service.getHistory(d.atStartOfDay(), d.atTime(LocalTime.MAX)));
         }
         return ApiResult.success(service.listAll());
+    }
+
+    @GetMapping("/exam-history")
+    public ApiResult<List<FocusSessionDTO>> examHistory(
+            @RequestParam(required = false) String date) {
+        if (date != null) {
+            LocalDate d = LocalDate.parse(date);
+            return ApiResult.success(service.getExamHistory(d.atStartOfDay(), d.atTime(LocalTime.MAX)));
+        }
+        return ApiResult.success(service.getExamHistory(
+                LocalDate.of(2000, 1, 1).atStartOfDay(),
+                LocalDate.now().atTime(LocalTime.MAX)));
     }
 
     @PostMapping("/debug/add")

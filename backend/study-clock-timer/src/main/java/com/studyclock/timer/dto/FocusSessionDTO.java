@@ -14,6 +14,11 @@ public class FocusSessionDTO {
     private FocusStatus status;
     private String note;
     private String subjectName;
+    private Boolean examMode;
+    private String examPaperName;
+    private String wrongQuestions;
+    private Integer examTotalScore;
+    private Integer examScore;
 
     public FocusSessionDTO() {}
 
@@ -35,4 +40,14 @@ public class FocusSessionDTO {
     public void setNote(String note) { this.note = note; }
     public String getSubjectName() { return subjectName; }
     public void setSubjectName(String subjectName) { this.subjectName = subjectName; }
+    public Boolean getExamMode() { return examMode; }
+    public void setExamMode(Boolean examMode) { this.examMode = examMode; }
+    public String getExamPaperName() { return examPaperName; }
+    public void setExamPaperName(String examPaperName) { this.examPaperName = examPaperName; }
+    public String getWrongQuestions() { return wrongQuestions; }
+    public void setWrongQuestions(String wrongQuestions) { this.wrongQuestions = wrongQuestions; }
+    public Integer getExamTotalScore() { return examTotalScore; }
+    public void setExamTotalScore(Integer examTotalScore) { this.examTotalScore = examTotalScore; }
+    public Integer getExamScore() { return examScore; }
+    public void setExamScore(Integer examScore) { this.examScore = examScore; }
 }

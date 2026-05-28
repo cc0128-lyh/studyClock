@@ -1,6 +1,8 @@
 node_modules/
 dist/
 dist-electron/
+frontend/jre/
+frontend/cache/
 data/
 wallpapers/
 uploads/
@@ -23,3 +25,6 @@ backend/**/*.jar
 # Temp docs
 *.docx
 ~$*
+
+# Claude session data
+.claude/

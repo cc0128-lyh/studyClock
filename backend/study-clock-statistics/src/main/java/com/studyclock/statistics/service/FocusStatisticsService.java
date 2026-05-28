@@ -39,6 +39,9 @@ public class FocusStatisticsService {
         dto.setWeeklySeconds(repository.sumActualSecondsByDateRange(weekStart, weekEnd));
         dto.setMonthlySeconds(repository.sumActualSecondsByDateRange(monthStart, monthEnd));
         dto.setSessionCount(repository.findAll().size());
+        dto.setDailySessionCount(repository.countByDateRange(dayStart, dayEnd).intValue());
+        dto.setWeeklySessionCount(repository.countByDateRange(weekStart, weekEnd).intValue());
+        dto.setMonthlySessionCount(repository.countByDateRange(monthStart, monthEnd).intValue());
 
         // subject breakdown — 今日学科分布
         List<Object[]> rows = repository.sumBySubjectByDateRange(dayStart, dayEnd);

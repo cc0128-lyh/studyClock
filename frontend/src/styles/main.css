@@ -1,15 +1,64 @@
-:root {
-  --bg-color: #0a0a0a;
-  --text-color: #ffffff;
+:root,
+[data-theme="dark"] {
+  --text-primary: #ffffff;
+  --text-secondary: rgba(255, 255, 255, 0.7);
+  --text-muted: rgba(255, 255, 255, 0.45);
+  --text-inverse: #0a0a0a;
+
+  --bg-primary: #0a0a0a;
+  --bg-secondary: #141414;
+  --bg-card: rgba(255, 255, 255, 0.04);
+  --bg-hover: rgba(255, 255, 255, 0.08);
+  --bg-glass: rgba(255, 255, 255, 0.06);
+
   --accent-color: #ffffff;
   --accent-muted: rgba(255, 255, 255, 0.15);
-  --secondary-color: #141414;
+
+  --border-color: rgba(255, 255, 255, 0.08);
+  --border-light: rgba(255, 255, 255, 0.12);
+  --border-subtle: rgba(255, 255, 255, 0.2);
+  --glass-border: rgba(255, 255, 255, 0.1);
+
   --panel-bg: rgba(255, 255, 255, 0.04);
   --panel-border: rgba(255, 255, 255, 0.08);
-  --border-color: rgba(255, 255, 255, 0.08);
-  --glass-bg: rgba(255, 255, 255, 0.06);
-  --glass-border: rgba(255, 255, 255, 0.1);
+  --secondary-color: #141414;
   --font-mono: 'Courier New', monospace;
+  --wallpaper-overlay: linear-gradient(rgba(10,10,10,0.5), rgba(10,10,10,0.7));
+  --overlay-bg: rgba(0, 0, 0, 0.6);
+  --color-scheme: dark;
+  --toggle-bg: rgba(255,255,255,0.15);
+  --toggle-active-bg: rgba(255,255,255,0.3);
+}
+
+[data-theme="light"] {
+  --text-primary: #1a1a1a;
+  --text-secondary: rgba(0, 0, 0, 0.65);
+  --text-muted: rgba(0, 0, 0, 0.4);
+  --text-inverse: #ffffff;
+
+  --bg-primary: #f5f5f5;
+  --bg-secondary: #e8e8e8;
+  --bg-card: rgba(255, 255, 255, 0.7);
+  --bg-hover: rgba(0, 0, 0, 0.06);
+  --bg-glass: rgba(255, 255, 255, 0.5);
+
+  --accent-color: #1a1a1a;
+  --accent-muted: rgba(0, 0, 0, 0.1);
+
+  --border-color: rgba(0, 0, 0, 0.08);
+  --border-light: rgba(0, 0, 0, 0.12);
+  --border-subtle: rgba(0, 0, 0, 0.2);
+  --glass-border: rgba(0, 0, 0, 0.08);
+
+  --panel-bg: rgba(255, 255, 255, 0.6);
+  --panel-border: rgba(0, 0, 0, 0.06);
+  --secondary-color: #e8e8e8;
+  --font-mono: 'Courier New', monospace;
+  --wallpaper-overlay: linear-gradient(rgba(255,255,255,0.15), rgba(255,255,255,0.3));
+  --overlay-bg: rgba(0, 0, 0, 0.4);
+  --color-scheme: light;
+  --toggle-bg: rgba(0,0,0,0.1);
+  --toggle-active-bg: rgba(0,0,0,0.2);
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -19,12 +68,13 @@ html, body, #app {
   height: 100%;
   overflow: hidden;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  color: var(--text-color);
-  background: var(--bg-color);
+  color: var(--text-primary);
+  background: var(--bg-primary);
   user-select: none;
+  color-scheme: var(--color-scheme);
 }
 
 ::-webkit-scrollbar { width: 4px; }
 ::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.12); border-radius: 2px; }
-::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.2); }
+::-webkit-scrollbar-thumb { background: rgba(128,128,128,0.3); border-radius: 2px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(128,128,128,0.5); }

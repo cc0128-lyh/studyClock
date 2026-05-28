@@ -1,12 +1,15 @@
 <template>
   <div class="wallpaper-bg" :style="bgStyleComputed">
-    <slot></slot>
+    <div class="wallpaper-content">
+      <slot></slot>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { computed, onMounted } from 'vue'
 import { useWallpaperStore } from '@/stores/wallpaper'
+import { resolveBackendUrl } from '@/api'
 
 const wallpaperStore = useWallpaperStore()
 
@@ -16,17 +19,16 @@ onMounted(() => {
 
 const bgStyleComputed = computed(() => {
   const wp = wallpaperStore.activeWallpaper
-  const overlay = 'linear-gradient(rgba(10,10,10,0.5), rgba(10,10,10,0.7))'
 
   if (!wp) {
-    return { background: '#0a0a0a' }
+    return {}
   }
   if (wp.type === 'COLOR') {
-    return { background: wp.bgColor || '#0a0a0a' }
+    return { background: wp.bgColor || '' }
   }
-  // IMAGE type: overlay gradient + image
+  // IMAGE type
   return {
-    background: `${overlay}, url(${wp.filePath}) center/cover no-repeat`
+    background: `url(${resolveBackendUrl(wp.filePath)}) center/cover no-repeat`
   }
 })
 </script>
@@ -37,5 +39,20 @@ const bgStyleComputed = computed(() => {
   height: 100%;
   position: relative;
   transition: background 0.8s ease;
+  background: var(--bg-primary);
+}
+.wallpaper-bg::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--wallpaper-overlay);
+  pointer-events: none;
+  z-index: 0;
+}
+.wallpaper-content {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
 }
 </style>

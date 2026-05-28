@@ -8,8 +8,16 @@
 </template>
 
 <script setup lang="ts">
+import { onMounted } from 'vue'
 import WallpaperBackground from '@/components/WallpaperBackground.vue'
 import TopBar from '@/components/TopBar.vue'
+import { useThemeStore } from '@/stores/theme'
+
+const themeStore = useThemeStore()
+
+onMounted(() => {
+  themeStore.initTheme()
+})
 </script>
 
 <style scoped>

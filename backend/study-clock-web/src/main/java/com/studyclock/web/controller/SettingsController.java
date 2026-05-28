@@ -2,6 +2,7 @@ package com.studyclock.web.controller;
 
 import com.studyclock.common.dto.ApiResult;
 import com.studyclock.settings.service.AppSettingService;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
@@ -16,7 +17,9 @@ import java.util.UUID;
 public class SettingsController {
 
     private final AppSettingService service;
-    private static final String UPLOAD_DIR = "uploads/avatars/";
+
+    @Value("${studyclock.home:./}")
+    private String studyclockHome;
 
     public SettingsController(AppSettingService service) {
         this.service = service;
@@ -50,7 +53,7 @@ public class SettingsController {
             return ApiResult.error("File is empty");
         }
         try {
-            Path uploadPath = Paths.get(UPLOAD_DIR).toAbsolutePath();
+            Path uploadPath = Paths.get(studyclockHome, "uploads", "avatars").toAbsolutePath();
             if (!Files.exists(uploadPath)) {
                 Files.createDirectories(uploadPath);
             }

@@ -7,7 +7,7 @@ spring:
       max-file-size: 5MB
       max-request-size: 10MB
   datasource:
-    url: jdbc:h2:file:./data/studyclock;DB_CLOSE_ON_EXIT=FALSE;AUTO_RECONNECT=TRUE
+    url: jdbc:h2:file:${studyclock.home:./}/data/studyclock;DB_CLOSE_ON_EXIT=FALSE;AUTO_RECONNECT=TRUE
     driver-class-name: org.h2.Driver
     username: sa
     password:
@@ -22,7 +22,12 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.H2Dialect
+    defer-datasource-initialization: false
 
-# Wallpaper storage path
+  sql:
+    init:
+      mode: never  # JPA ddl-auto: update 处理表结构，不使用 SQL 脚本
+
+# Data storage root (overridden by --studyclock.home=<path> in packaged Electron app)
 studyclock:
-  wallpaper-dir: ./wallpapers
+  wallpaper-dir: ${studyclock.home:./}/wallpapers

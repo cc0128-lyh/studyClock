@@ -9,6 +9,8 @@
     "build": "vite build",
     "electron:dev": "concurrently \"vite\" \"wait-on http://localhost:5173 && electron .\"",
     "electron:build": "vite build && electron-builder",
+    "jre": "scripts\\build-jre.bat",
+    "dist": "vite build && scripts\\build-jre.bat && electron-builder",
     "preview": "vite preview"
   },
   "dependencies": {
@@ -36,8 +38,12 @@
       "dist/**/*",
       "electron/**/*"
     ],
+    "electronDist": "node_modules/electron/dist",
     "win": {
-      "target": "nsis",
+      "target": [
+        "nsis",
+        "portable"
+      ],
       "icon": "public/icon.png"
     },
     "nsis": {
@@ -45,10 +51,18 @@
       "allowToChangeInstallationDirectory": true,
       "installerSidebar": null
     },
+    "portable": {
+      "artifactName": "${productName}-${version}-portable.${ext}"
+    },
     "extraResources": [
       {
-        "from": "../backend/target/study-clock-bootstrap-1.0.0.jar",
+        "from": "../backend/study-clock-bootstrap/target/study-clock-bootstrap-1.0.0.jar",
         "to": "backend/study-clock.jar"
+      },
+      {
+        "from": "jre",
+        "to": "jre",
+        "filter": ["**/*"]
       }
     ]
   }

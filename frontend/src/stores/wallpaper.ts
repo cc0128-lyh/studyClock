@@ -33,6 +33,12 @@ export const useWallpaperStore = defineStore('wallpaper', () => {
     }
   }
 
+  async function upload(file: File) {
+    const res: any = await wallpaperApi.upload(file)
+    await fetchList()
+    return res
+  }
+
   const bgStyle = ref('')
 
   function updateBgStyle() {
@@ -48,5 +54,5 @@ export const useWallpaperStore = defineStore('wallpaper', () => {
     }
   }
 
-  return { activeWallpaper, list, bgStyle, fetchActive, fetchList, setActive, updateBgStyle }
+  return { activeWallpaper, list, bgStyle, fetchActive, fetchList, setActive, upload, updateBgStyle }
 })

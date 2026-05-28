@@ -1,73 +1,200 @@
 <template>
-  <div class="focus-view">
+  <div :class="['focus-view', `pos-${focusStyle.style.position}`]">
     <!-- top progress bar -->
-    <div v-if="timerStore.currentSession" class="top-progress-bar">
-      <div class="top-progress-subject">{{ timerStore.selectedSubject || '其他' }}</div>
-      <div class="top-progress-track">
-        <div class="top-progress-fill" :style="{ width: `${timerStore.progress * 100}%` }"></div>
+    <Transition name="slide">
+      <div v-if="timerStore.currentSession && timerStore.examPhase !== 'review'" class="top-progress-bar">
+        <div class="top-progress-subject">{{ timerStore.selectedSubject || '其他' }}</div>
+        <div v-if="!timerStore.isCountup" class="top-progress-track">
+          <div class="top-progress-fill" :style="{ width: `${timerStore.progress * 100}%` }"></div>
+        </div>
       </div>
-    </div>
+    </Transition>
 
-    <div class="center-content">
+    <!-- Normal content (hidden during review) -->
+    <div v-if="timerStore.examPhase !== 'review'" class="center-content">
       <ClockDisplay
-        label="专注时间"
+        :label="timerLabel"
         :display-time="timerStore.formattedTime"
       />
-      <TimerControls />
+      <div class="timer-col">
+        <TimerControls />
+
+        <!-- Exam mode entry -->
+        <div v-if="!timerStore.currentSession && !timerStore.examMode" class="exam-entry">
+          <button class="exam-btn" @click="showExamInput = true">📝 考试模式</button>
+        </div>
+      </div>
+
+      <!-- Exam setup dialog (frosted glass) -->
+      <Transition name="fade">
+        <div v-if="showExamInput" class="exam-setup">
+          <div class="glass-card">
+            <div class="glass-title">📝 考试设置</div>
+
+            <div class="glass-row">
+              <span class="glass-label">科目</span>
+              <span class="glass-value">{{ timerStore.selectedSubject || '其他' }}</span>
+            </div>
+
+            <div class="glass-row">
+              <span class="glass-label">试卷名称</span>
+              <input
+                v-model="examPaperName"
+                type="text"
+                class="glass-input"
+                placeholder="输入试卷名称（可选）"
+              />
+            </div>
+
+            <div class="glass-row">
+              <span class="glass-label">考试时长</span>
+              <div class="glass-input-group">
+                <input
+                  v-model.number="examInputMinutes"
+                  type="number"
+                  min="1"
+                  max="600"
+                  class="glass-input narrow"
+                  placeholder="分钟"
+                  @keyup.enter="startExam"
+                />
+                <span class="glass-unit">分钟</span>
+              </div>
+            </div>
+
+            <div class="glass-actions">
+              <button class="glass-btn primary" @click="startExam">开始考试</button>
+              <button class="glass-btn secondary" @click="cancelExamSetup">取消</button>
+            </div>
+          </div>
+        </div>
+      </Transition>
+    </div>
+
+    <!-- Review page (full page during review phase) -->
+    <div v-else class="review-page">
+      <div class="review-header">
+        <span class="review-header-icon">📋</span>
+        <span class="review-header-title">考试复盘</span>
+      </div>
+
+      <div class="review-timer-section">
+        <div class="review-timer-label">复盘时间</div>
+        <div class="review-timer-value">{{ timerStore.reviewFormattedTime }}</div>
+      </div>
+
+      <div class="review-info-grid">
+        <div class="review-info-item">
+          <span class="review-info-label">科目</span>
+          <span class="review-info-value">{{ timerStore.selectedSubject || '其他' }}</span>
+        </div>
+        <div class="review-info-item">
+          <span class="review-info-label">试卷</span>
+          <span class="review-info-value">{{ timerStore.examPaperName || '未命名' }}</span>
+        </div>
+      </div>
+
+      <div class="review-field">
+        <label class="review-field-label">错题记录</label>
+        <textarea
+          v-model="timerStore.wrongQuestions"
+          class="review-textarea"
+          placeholder="记录本次考试的错题..."
+          rows="4"
+        ></textarea>
+      </div>
+
+      <div class="review-scores">
+        <div class="review-score-field">
+          <label class="review-field-label">考试满分</label>
+          <div class="review-score-input-wrap">
+            <input
+              v-model.number="timerStore.examTotalScore"
+              type="number"
+              min="0"
+              class="review-input"
+            />
+            <span class="review-unit">分</span>
+          </div>
+        </div>
+        <div class="review-score-field">
+          <label class="review-field-label">考试得分</label>
+          <div class="review-score-input-wrap">
+            <input
+              v-model.number="timerStore.examScore"
+              type="number"
+              min="0"
+              class="review-input"
+            />
+            <span class="review-unit">分</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="review-actions">
+        <button class="review-btn primary" @click="timerStore.confirmReview()">确认完成</button>
+        <button class="review-btn secondary" @click="timerStore.cancelReview()">跳过复盘</button>
+      </div>
     </div>
 
     <ShortcutPanel
+      v-if="!timerStore.isExam"
       :shortcuts="shortcuts"
-      @manage="showManage = true"
     />
 
     <BreakReminder
+      v-if="timerStore.examPhase !== 'review'"
       :visible="timerStore.justCompleted"
       :minutes="timerStore.completedMinutes"
       :seconds="timerStore.completedSeconds"
+      :exam-mode="timerStore.completedAsExam"
       @close="timerStore.acknowledgeCompletion()"
       @start-next="startNextRound"
     />
-
-    <div v-if="showManage" class="modal-overlay" @click.self="showManage = false">
-      <div class="modal">
-        <h3>管理快捷工具</h3>
-        <div class="shortcut-form">
-          <input v-model="form.name" placeholder="名称" />
-          <select v-model="form.launchType">
-            <option value="URL">网址</option>
-            <option value="APP">应用</option>
-          </select>
-          <input v-if="form.launchType === 'URL'" v-model="form.url" placeholder="https://..." />
-          <input v-else v-model="form.appPath" placeholder="应用路径" />
-          <button class="btn-save" @click="saveShortcut">添加</button>
-        </div>
-        <div class="shortcut-list-modal">
-          <div v-for="s in shortcuts" :key="s.id" class="shortcut-item">
-            <span>{{ s.name }}</span>
-            <button class="btn-del" @click="deleteShortcut(s.id)">✕</button>
-          </div>
-        </div>
-        <button class="btn-close" @click="showManage = false">关闭</button>
-      </div>
-    </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import ClockDisplay from '@/components/ClockDisplay.vue'
 import TimerControls from '@/components/TimerControls.vue'
 import ShortcutPanel from '@/components/ShortcutPanel.vue'
 import BreakReminder from '@/components/BreakReminder.vue'
 import { useTimerStore } from '@/stores/timer'
+import { useFocusStyleStore } from '@/stores/focusStyle'
 import { shortcutApi, type Shortcut } from '@/api/shortcut'
 
 const timerStore = useTimerStore()
-const shortcuts = ref<Shortcut[]>([])
-const showManage = ref(false)
+const focusStyle = useFocusStyleStore()
 
-const form = ref({ name: '', launchType: 'URL', url: '', appPath: '' })
+const timerLabel = computed(() => {
+  if (timerStore.isExam) return '考试模式'
+  return timerStore.isCountup ? '已专注' : '专注时间'
+})
+const shortcuts = ref<Shortcut[]>([])
+
+const showExamInput = ref(false)
+const examInputMinutes = ref(120)
+const examPaperName = ref('')
+
+async function startExam() {
+  const m = Math.max(1, Math.min(600, examInputMinutes.value || 120))
+  showExamInput.value = false
+  timerStore.enterExamMode(m)
+  timerStore.examPaperName = examPaperName.value
+  try {
+    await timerStore.startSession(timerStore.selectedSubject || undefined)
+    if (timerStore.currentSession) {
+      timerStore.examPhase = 'exam'
+    }
+  } catch {}
+}
+
+function cancelExamSetup() {
+  showExamInput.value = false
+  examInputMinutes.value = 120
+  examPaperName.value = ''
+}
 
 function startNextRound() {
   timerStore.acknowledgeCompletion()
@@ -83,29 +210,10 @@ async function fetchShortcuts() {
   }
 }
 
-async function saveShortcut() {
-  if (!form.value.name) return
-  try {
-    await shortcutApi.create(form.value as any)
-    form.value = { name: '', launchType: 'URL', url: '', appPath: '' }
-    await fetchShortcuts()
-  } catch (e) {
-    console.error(e)
-  }
-}
-
-async function deleteShortcut(id: number) {
-  try {
-    await shortcutApi.delete(id)
-    await fetchShortcuts()
-  } catch (e) {
-    console.error(e)
-  }
-}
-
 onMounted(() => {
   fetchShortcuts()
   timerStore.loadDefaultTarget()
+  timerStore.loadNotificationSetting()
 })
 </script>
 
@@ -118,8 +226,48 @@ onMounted(() => {
   align-items: center;
   justify-content: center;
   position: relative;
+  transition: all 0.5s ease;
 }
 .center-content { text-align: center; }
+.timer-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+/* --- Position presets --- */
+
+/* Center (default) */
+.pos-center .center-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Top compact */
+.pos-top {
+  justify-content: flex-start;
+  padding-top: 2rem;
+}
+.pos-top .center-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Side float */
+.pos-side {
+  flex-direction: row;
+  justify-content: center;
+  gap: 4rem;
+}
+.pos-side .center-content {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 3rem;
+}
 
 /* Top progress bar */
 .top-progress-bar {
@@ -141,7 +289,7 @@ onMounted(() => {
 .top-progress-track {
   width: 100%;
   height: 4px;
-  background: rgba(255,255,255,0.1);
+  background: var(--border-light);
 }
 .top-progress-fill {
   height: 100%;
@@ -149,59 +297,354 @@ onMounted(() => {
   transition: width 1s linear;
 }
 
-.modal-overlay {
-  position: fixed; inset: 0;
-  background: rgba(0,0,0,0.6);
+/* Progress bar slide transition */
+.slide-enter-active {
+  transition: all 0.4s ease-out;
+}
+.slide-leave-active {
+  transition: all 0.3s ease-in;
+}
+.slide-enter-from {
+  transform: translateY(-100%);
+  opacity: 0;
+}
+.slide-leave-to {
+  transform: translateY(-100%);
+  opacity: 0;
+}
+
+/* Exam mode entry */
+.exam-entry {
+  margin-top: 1.5rem;
+}
+.exam-btn {
+  padding: 0.5rem 1.5rem;
+  background: transparent;
+  border: 1px solid var(--accent-color);
+  border-radius: 20px;
+  color: var(--accent-color);
+  cursor: pointer;
+  font-size: 0.85rem;
+  letter-spacing: 0.05em;
+  transition: all 0.2s;
+}
+.exam-btn:hover {
+  background: var(--accent-color);
+  color: var(--text-inverse);
+}
+
+/* --- Frosted glass overlay (exam setup dialog) --- */
+.exam-setup {
+  position: fixed;
+  inset: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 200;
+  background: rgba(0,0,0,0.5);
+  z-index: 100;
 }
-.modal {
-  background: var(--secondary-color);
-  border-radius: 16px;
-  padding: 2rem;
-  min-width: 400px;
-  border: 1px solid var(--border-color);
+
+.glass-card {
+  background: var(--panel-bg);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 24px;
+  padding: 2rem 2.2rem;
+  text-align: left;
+  min-width: 320px;
+  max-width: 420px;
+  width: 90%;
+  box-shadow: 0 8px 40px rgba(0,0,0,0.3);
+  animation: glassIn 0.3s ease;
 }
-.modal h3 { margin-bottom: 1rem; font-weight: 500; }
-.shortcut-form { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1rem; }
-.shortcut-form input, .shortcut-form select {
-  flex: 1;
-  min-width: 120px;
-  padding: 0.5rem 0.8rem;
-  background: rgba(255,255,255,0.05);
-  border: 1px solid var(--border-color);
-  border-radius: 8px;
-  color: #fff;
-  font-size: 0.85rem;
+@keyframes glassIn {
+  from { transform: translateY(20px) scale(0.97); opacity: 0; }
+  to { transform: translateY(0) scale(1); opacity: 1; }
 }
-.btn-save {
-  padding: 0.5rem 1.2rem;
-  background: #fff;
-  border: none;
-  border-radius: 8px;
-  color: #0a0a0a;
-  cursor: pointer;
+
+.glass-title {
+  font-size: 1.15rem;
+  font-weight: 600;
+  text-align: center;
+  margin-bottom: 1.5rem;
+  letter-spacing: 0.05em;
+}
+
+.glass-row {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  margin-bottom: 1rem;
+  padding: 0 0.2rem;
+}
+.glass-label {
+  font-size: 0.82rem;
+  opacity: 0.6;
+  min-width: 4.5em;
+  flex-shrink: 0;
+}
+.glass-value {
+  font-size: 0.95rem;
   font-weight: 500;
 }
-.shortcut-item {
+
+.glass-input {
+  flex: 1;
+  padding: 0.55rem 0.8rem;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 10px;
+  color: var(--text-primary);
+  font-size: 0.92rem;
+  outline: none;
+  transition: border-color 0.2s;
+  min-width: 0;
+}
+.glass-input:focus {
+  border-color: var(--accent-color);
+}
+.glass-input.narrow {
+  flex: none;
+  width: 90px;
+  text-align: center;
+}
+.glass-input::placeholder {
+  color: var(--text-muted);
+  opacity: 0.5;
+}
+.glass-input::-webkit-outer-spin-button,
+.glass-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.glass-input-group {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  padding: 0.5rem 0;
-  border-bottom: 1px solid var(--border-color);
+  gap: 0.4rem;
 }
-.btn-del { background: none; border: none; color: rgba(255,255,255,0.4); cursor: pointer; }
-.btn-del:hover { color: var(--accent-color); }
-.btn-close {
-  width: 100%;
-  margin-top: 1rem;
-  padding: 0.5rem;
-  background: rgba(255,255,255,0.05);
-  border: 1px solid var(--border-color);
-  border-radius: 8px;
-  color: #fff;
+.glass-unit {
+  font-size: 0.82rem;
+  opacity: 0.5;
+}
+
+.glass-actions {
+  display: flex;
+  gap: 0.8rem;
+  justify-content: center;
+  margin-top: 1.5rem;
+}
+.glass-btn {
+  padding: 0.6rem 1.8rem;
+  border: none;
+  border-radius: 20px;
+  font-size: 0.92rem;
   cursor: pointer;
+  transition: all 0.2s;
+  font-weight: 500;
+  letter-spacing: 0.03em;
 }
+.glass-btn.primary {
+  background: var(--accent-color);
+  color: var(--text-inverse);
+}
+.glass-btn.primary:hover {
+  opacity: 0.85;
+}
+.glass-btn.secondary {
+  background: rgba(255,255,255,0.08);
+  color: var(--text-secondary);
+  border: 1px solid rgba(255,255,255,0.1);
+}
+.glass-btn.secondary:hover {
+  background: rgba(255,255,255,0.14);
+  color: var(--text-primary);
+}
+
+/* --- Review page --- */
+.review-page {
+  width: 100%;
+  max-width: 480px;
+  padding: 2rem 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  animation: reviewIn 0.35s ease;
+}
+@keyframes reviewIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.review-header {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: 2rem;
+}
+.review-header-icon {
+  font-size: 1.6rem;
+}
+.review-header-title {
+  font-size: 1.3rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+}
+
+.review-timer-section {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+.review-timer-label {
+  font-size: 0.82rem;
+  opacity: 0.5;
+  margin-bottom: 0.3rem;
+}
+.review-timer-value {
+  font-family: var(--font-mono, monospace);
+  font-size: 3rem;
+  font-weight: 200;
+  color: var(--accent-color);
+  letter-spacing: 0.05em;
+  line-height: 1.2;
+}
+
+.review-info-grid {
+  display: flex;
+  gap: 2rem;
+  margin-bottom: 1.5rem;
+  padding: 0.8rem 1.2rem;
+  background: var(--bg-hover);
+  border-radius: 12px;
+  width: 100%;
+}
+.review-info-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  flex: 1;
+  text-align: center;
+}
+.review-info-label {
+  font-size: 0.75rem;
+  opacity: 0.5;
+}
+.review-info-value {
+  font-size: 0.95rem;
+  font-weight: 500;
+}
+
+.review-field {
+  width: 100%;
+  margin-bottom: 1.2rem;
+}
+.review-field-label {
+  display: block;
+  font-size: 0.8rem;
+  opacity: 0.6;
+  margin-bottom: 0.4rem;
+}
+.review-textarea {
+  width: 100%;
+  padding: 0.7rem 0.9rem;
+  background: var(--bg-hover);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  color: var(--text-primary);
+  font-size: 0.9rem;
+  outline: none;
+  resize: vertical;
+  min-height: 80px;
+  font-family: inherit;
+  line-height: 1.6;
+  box-sizing: border-box;
+  transition: border-color 0.2s;
+}
+.review-textarea:focus {
+  border-color: var(--accent-color);
+}
+.review-textarea::placeholder {
+  color: var(--text-muted);
+  opacity: 0.5;
+}
+
+.review-scores {
+  display: flex;
+  gap: 1rem;
+  width: 100%;
+  margin-bottom: 2rem;
+}
+.review-score-field {
+  flex: 1;
+}
+.review-score-input-wrap {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+.review-input {
+  width: 100%;
+  padding: 0.6rem 0.8rem;
+  background: var(--bg-hover);
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  color: var(--text-primary);
+  font-size: 1.1rem;
+  text-align: center;
+  outline: none;
+  box-sizing: border-box;
+  transition: border-color 0.2s;
+}
+.review-input:focus {
+  border-color: var(--accent-color);
+}
+.review-input::-webkit-outer-spin-button,
+.review-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+.review-unit {
+  font-size: 0.82rem;
+  opacity: 0.5;
+  flex-shrink: 0;
+}
+
+.review-actions {
+  display: flex;
+  gap: 0.8rem;
+  justify-content: center;
+}
+.review-btn {
+  padding: 0.7rem 2rem;
+  border: none;
+  border-radius: 24px;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+}
+.review-btn.primary {
+  background: var(--accent-color);
+  color: var(--text-inverse);
+}
+.review-btn.primary:hover {
+  opacity: 0.85;
+}
+.review-btn.secondary {
+  background: transparent;
+  color: var(--text-muted);
+  border: 1px solid var(--border-color);
+}
+.review-btn.secondary:hover {
+  color: var(--text-primary);
+  border-color: var(--text-secondary);
+}
+
+/* Fade transition for overlay */
+.fade-enter-active { transition: opacity 0.25s ease; }
+.fade-leave-active { transition: opacity 0.2s ease; }
+.fade-enter-from,
+.fade-leave-to { opacity: 0; }
 </style>

@@ -2,9 +2,9 @@
   <Teleport to="body">
     <div v-if="visible" class="reminder-overlay" @click.self="close">
       <div class="reminder-card">
-        <div class="reminder-icon">🎉</div>
-        <div class="reminder-title">专注完成！</div>
-        <div class="reminder-duration">
+        <div class="reminder-icon">{{ props.examMode ? '📝' : '🎉' }}</div>
+        <div class="reminder-title">{{ props.examMode ? '考试完成！' : '专注完成！' }}</div>
+        <div v-if="!props.examMode" class="reminder-duration">
           本次专注
           <strong>{{ displayText }}</strong>
         </div>
@@ -29,6 +29,7 @@ const props = defineProps<{
   visible: boolean
   minutes: number
   seconds?: number
+  examMode?: boolean
 }>()
 
 const emit = defineEmits<{
@@ -83,8 +84,9 @@ function startNext() {
   to { opacity: 1; }
 }
 .reminder-card {
-  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-  border: 1px solid rgba(255,255,255,0.12);
+  background: var(--panel-bg);
+  backdrop-filter: blur(16px);
+  border: 1px solid var(--border-color);
   border-radius: 24px;
   padding: 2.5rem 3rem;
   text-align: center;
@@ -108,11 +110,11 @@ function startNext() {
   margin-bottom: 1.5rem;
 }
 .reminder-quote {
-  background: rgba(255,255,255,0.05);
+  background: var(--bg-hover);
   border-radius: 14px;
   padding: 1.2rem;
   margin-bottom: 1.8rem;
-  border: 1px solid rgba(255,255,255,0.06);
+  border: 1px solid var(--border-color);
 }
 .quote-icon { font-size: 1.2rem; margin-bottom: 0.4rem; }
 .quote-text {
@@ -136,14 +138,14 @@ function startNext() {
   transition: all 0.2s;
 }
 .action-btn.primary {
-  background: #fff;
-  color: #0a0a0a;
+  background: var(--accent-color);
+  color: var(--text-inverse);
 }
 .action-btn.primary:hover { opacity: 0.85; }
 .action-btn.secondary {
-  background: rgba(255,255,255,0.08);
-  color: rgba(255,255,255,0.8);
-  border: 1px solid rgba(255,255,255,0.15);
+  background: var(--bg-hover);
+  color: var(--text-secondary);
+  border: 1px solid var(--accent-muted);
 }
-.action-btn.secondary:hover { background: rgba(255,255,255,0.15); }
+.action-btn.secondary:hover { background: var(--accent-muted); }
 </style>

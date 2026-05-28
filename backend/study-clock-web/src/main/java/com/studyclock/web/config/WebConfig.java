@@ -1,13 +1,22 @@
 package com.studyclock.web.config;
 
+import jakarta.annotation.PostConstruct;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
+
+    @Value("${studyclock.home:./}")
+    private String studyclockHome;
 
     @Override
     public void addCorsMappings(CorsRegistry registry) {
@@ -19,10 +28,21 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        String uploadsAbsPath = Paths.get("uploads/").toAbsolutePath().toUri().toString();
+        String wallpaperAbs = Paths.get(studyclockHome, "wallpapers").toAbsolutePath().toUri().toString();
+        String uploadsAbs = Paths.get(studyclockHome, "uploads").toAbsolutePath().toUri().toString();
         registry.addResourceHandler("/wallpapers/**")
-                .addResourceLocations("file:wallpapers/");
+                .addResourceLocations(wallpaperAbs);
         registry.addResourceHandler("/uploads/**")
-                .addResourceLocations(uploadsAbsPath);
+                .addResourceLocations(uploadsAbs);
+    }
+
+    @PostConstruct
+    public void initDirectories() {
+        try {
+            Files.createDirectories(Paths.get(studyclockHome, "wallpapers"));
+            Files.createDirectories(Paths.get(studyclockHome, "uploads", "avatars"));
+        } catch (IOException e) {
+            System.err.println("Failed to create data directories: " + e.getMessage());
+        }
     }
 }

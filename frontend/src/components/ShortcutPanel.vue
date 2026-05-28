@@ -8,19 +8,29 @@
         class="shortcut-btn"
         @click="launch(item)"
       >
-        <span class="shortcut-icon">{{ item.icon || '🔗' }}</span>
+        <span class="shortcut-icon">
+          <img v-if="item.icon && item.icon.startsWith('http')" :src="item.icon" alt="" class="shortcut-favicon" @error="onImgError" />
+          <span v-else>{{ item.icon || '🔗' }}</span>
+        </span>
         <span class="shortcut-name">{{ item.name }}</span>
       </button>
     </div>
-    <button class="add-btn" @click="$emit('manage')">管理</button>
+    <button class="add-btn" @click="$router.push('/settings')">管理</button>
   </div>
 </template>
 
 <script setup lang="ts">
+import { useRouter } from 'vue-router'
 import type { Shortcut } from '@/api/shortcut'
 
 defineProps<{ shortcuts: Shortcut[] }>()
-const emit = defineEmits<{ manage: [] }>()
+const router = useRouter()
+
+function onImgError(e: Event) {
+  const img = e.target as HTMLImageElement
+  const fallback = document.createTextNode('🔗')
+  img.replaceWith(fallback)
+}
 
 function launch(item: Shortcut) {
   if (window.electronAPI) {
@@ -68,16 +78,17 @@ function launch(item: Shortcut) {
   align-items: center;
   gap: 0.2rem;
   padding: 0.6rem 0.4rem;
-  background: rgba(255,255,255,0.05);
+  background: var(--bg-hover);
   border: 1px solid transparent;
   border-radius: 10px;
-  color: #fff;
+  color: var(--text-primary);
   cursor: pointer;
   transition: all 0.2s;
   width: 64px;
 }
-.shortcut-btn:hover { background: rgba(255,255,255,0.12); border-color: var(--border-color); }
-.shortcut-icon { font-size: 1.3rem; }
+.shortcut-btn:hover { background: var(--accent-muted); border-color: var(--border-color); }
+.shortcut-icon { font-size: 1.3rem; display: flex; align-items: center; justify-content: center; }
+.shortcut-favicon { width: 22px; height: 22px; border-radius: 4px; object-fit: contain; }
 .shortcut-name { font-size: 0.7rem; opacity: 0.8; }
 .add-btn {
   width: 100%;
@@ -86,9 +97,9 @@ function launch(item: Shortcut) {
   background: transparent;
   border: 1px dashed var(--border-color);
   border-radius: 8px;
-  color: rgba(255,255,255,0.5);
+  color: var(--text-muted);
   cursor: pointer;
   font-size: 0.75rem;
 }
-.add-btn:hover { color: #fff; border-color: rgba(255,255,255,0.3); }
+.add-btn:hover { color: var(--text-primary); border-color: var(--border-light); }
 </style>

@@ -56,6 +56,7 @@ import { statisticsApi, type FocusSummary } from '@/api/statistics'
 const router = useRouter()
 const summary = ref<FocusSummary>({
   totalSeconds: 0, sessionCount: 0,
+  dailySessionCount: 0, weeklySessionCount: 0, monthlySessionCount: 0,
   dailySeconds: 0, weeklySeconds: 0, monthlySeconds: 0,
   subjectBreakdown: []
 })
@@ -123,7 +124,7 @@ h2 { font-weight: 400; letter-spacing: 0.1em; margin-bottom: 2rem; }
   transition: all 0.2s;
 }
 .today-card:hover {
-  border-color: rgba(255,255,255,0.3);
+  border-color: var(--accent-color);
   transform: translateY(-2px);
   box-shadow: 0 4px 20px rgba(0,0,0,0.4);
 }
@@ -136,7 +137,7 @@ h2 { font-weight: 400; letter-spacing: 0.1em; margin-bottom: 2rem; }
   font-size: 2rem;
   font-weight: 300;
   font-family: var(--font-mono);
-  color: #fff;
+  color: var(--text-primary);
 }
 .tc-count {
   font-size: 0.8rem;
@@ -168,16 +169,16 @@ h2 { font-weight: 400; letter-spacing: 0.1em; margin-bottom: 2rem; }
   margin-top: 1.5rem;
   padding: 0.7rem 2rem;
   background: transparent;
-  border: 1px solid rgba(255,255,255,0.25);
+  border: 1px solid var(--border-subtle);
   border-radius: 20px;
-  color: rgba(255,255,255,0.7);
+  color: var(--text-secondary);
   font-size: 0.9rem;
   cursor: pointer;
   transition: all 0.2s;
 }
 .detail-btn:hover {
-  background: rgba(255,255,255,0.08);
-  border-color: rgba(255,255,255,0.4);
-  color: #fff;
+  background: var(--bg-hover);
+  border-color: var(--text-secondary);
+  color: var(--text-primary);
 }
 </style>

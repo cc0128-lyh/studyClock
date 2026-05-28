@@ -44,12 +44,19 @@ public class FocusSessionService {
         return toDTO(repository.save(session));
     }
 
-    public FocusSessionDTO completeSession(Long id, Long actualSeconds) {
+    public FocusSessionDTO completeSession(Long id, Long actualSeconds,
+            Boolean examMode, String examPaperName, String wrongQuestions,
+            Integer examTotalScore, Integer examScore) {
         FocusSession session = repository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Session not found: " + id));
         session.setEndTime(LocalDateTime.now());
         session.setActualSeconds(actualSeconds);
         session.setStatus(FocusStatus.COMPLETED);
+        if (examMode != null) session.setExamMode(examMode);
+        if (examPaperName != null) session.setExamPaperName(examPaperName);
+        if (wrongQuestions != null) session.setWrongQuestions(wrongQuestions);
+        if (examTotalScore != null) session.setExamTotalScore(examTotalScore);
+        if (examScore != null) session.setExamScore(examScore);
         return toDTO(repository.save(session));
     }
 
@@ -105,6 +112,11 @@ public class FocusSessionService {
                 .map(this::toDTO).toList();
     }
 
+    public List<FocusSessionDTO> getExamHistory(LocalDateTime start, LocalDateTime end) {
+        return repository.findExamSessionsByDateRange(start, end).stream()
+                .map(this::toDTO).toList();
+    }
+
     FocusSession findEntityById(Long id) {
         return repository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Session not found: " + id));
@@ -121,6 +133,11 @@ public class FocusSessionService {
         dto.setStatus(entity.getStatus());
         dto.setNote(entity.getNote());
         dto.setSubjectName(entity.getSubjectName());
+        dto.setExamMode(entity.getExamMode());
+        dto.setExamPaperName(entity.getExamPaperName());
+        dto.setWrongQuestions(entity.getWrongQuestions());
+        dto.setExamTotalScore(entity.getExamTotalScore());
+        dto.setExamScore(entity.getExamScore());
         return dto;
     }
 }

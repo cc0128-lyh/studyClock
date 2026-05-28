@@ -34,6 +34,21 @@ public class FocusSession extends BaseEntity {
     @Column(name = "subject_name", length = 100)
     private String subjectName;
 
+    @Column(name = "exam_mode")
+    private Boolean examMode = false;
+
+    @Column(name = "exam_paper_name", length = 200)
+    private String examPaperName;
+
+    @Column(name = "wrong_questions", columnDefinition = "TEXT")
+    private String wrongQuestions;
+
+    @Column(name = "exam_total_score")
+    private Integer examTotalScore;
+
+    @Column(name = "exam_score")
+    private Integer examScore;
+
     public LocalDateTime getStartTime() { return startTime; }
     public void setStartTime(LocalDateTime startTime) { this.startTime = startTime; }
     public LocalDateTime getEndTime() { return endTime; }
@@ -50,4 +65,14 @@ public class FocusSession extends BaseEntity {
     public void setNote(String note) { this.note = note; }
     public String getSubjectName() { return subjectName; }
     public void setSubjectName(String subjectName) { this.subjectName = subjectName; }
+    public Boolean getExamMode() { return examMode; }
+    public void setExamMode(Boolean examMode) { this.examMode = examMode; }
+    public String getExamPaperName() { return examPaperName; }
+    public void setExamPaperName(String examPaperName) { this.examPaperName = examPaperName; }
+    public String getWrongQuestions() { return wrongQuestions; }
+    public void setWrongQuestions(String wrongQuestions) { this.wrongQuestions = wrongQuestions; }
+    public Integer getExamTotalScore() { return examTotalScore; }
+    public void setExamTotalScore(Integer examTotalScore) { this.examTotalScore = examTotalScore; }
+    public Integer getExamScore() { return examScore; }
+    public void setExamScore(Integer examScore) { this.examScore = examScore; }
 }

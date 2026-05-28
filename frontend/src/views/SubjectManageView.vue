@@ -52,14 +52,14 @@ onMounted(() => {
 .back-btn {
   background: none;
   border: none;
-  color: rgba(255,255,255,0.6);
+  color: var(--text-secondary);
   font-size: 0.9rem;
   cursor: pointer;
   padding: 0.3rem 0;
   margin-bottom: 0.5rem;
   transition: color 0.2s;
 }
-.back-btn:hover { color: #fff; }
+.back-btn:hover { color: var(--text-primary); }
 h2 {
   font-weight: 400;
   letter-spacing: 0.1em;
@@ -71,20 +71,20 @@ h2 {
 .subject-form input {
   flex: 1;
   padding: 0.6rem 1rem;
-  background: rgba(255,255,255,0.05);
+  background: var(--bg-hover);
   border: 1px solid var(--border-color);
   border-radius: 10px;
-  color: #fff;
+  color: var(--text-primary);
   font-size: 0.95rem;
   outline: none;
 }
 .subject-form input:focus { border-color: var(--accent-color); }
 .btn-save-sm {
   padding: 0.6rem 1.2rem;
-  background: #fff;
+  background: var(--accent-color);
   border: none;
   border-radius: 10px;
-  color: #0a0a0a;
+  color: var(--text-inverse);
   cursor: pointer;
   white-space: nowrap;
   font-weight: 500;
@@ -103,14 +103,14 @@ h2 {
   justify-content: space-between;
   align-items: center;
   padding: 0.6rem 0.8rem;
-  background: rgba(255,255,255,0.03);
+  background: var(--bg-card);
   border-radius: 8px;
 }
 .subject-name { font-size: 0.95rem; }
 .btn-del {
   background: none;
   border: none;
-  color: rgba(255,255,255,0.3);
+  color: var(--text-muted);
   cursor: pointer;
   font-size: 0.9rem;
   padding: 0.2rem 0.4rem;

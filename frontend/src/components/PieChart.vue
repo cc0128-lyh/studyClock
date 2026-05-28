@@ -2,7 +2,7 @@
   <div class="pie-chart">
     <svg :width="size" :height="size" viewBox="0 0 300 300">
       <!-- background circle -->
-      <circle cx="150" cy="150" r="75" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="16" />
+      <circle cx="150" cy="150" r="75" fill="none" stroke="var(--border-color)" stroke-width="16" />
       <!-- slices -->
       <path
         v-for="(slice, i) in slices"
@@ -18,21 +18,19 @@
         <line
           :x1="item.line.x1" :y1="item.line.y1"
           :x2="item.line.x2" :y2="item.line.y2"
-          stroke="rgba(255,255,255,0.25)"
+          stroke="rgba(128,128,128,0.25)"
           stroke-width="1"
         />
         <circle :cx="item.line.x1" :cy="item.line.y1" r="2.5" :fill="item.color" />
         <text
           :x="item.text.x" :y="item.text.y"
           :text-anchor="item.text.anchor"
-          fill="#fff"
-          font-size="11"
+          class="pie-label-name"
         >{{ item.text.name }}</text>
         <text
           :x="item.text.x" :y="item.text.y + 15"
           :text-anchor="item.text.anchor"
-          fill="rgba(255,255,255,0.5)"
-          font-size="9"
+          class="pie-label-value"
         >{{ item.text.value }}</text>
       </g>
       <!-- center text -->
@@ -60,9 +58,9 @@ const props = withDefaults(defineProps<{
 })
 
 const colors = [
-  '#ffffff', '#d4d4d4', '#a8a8a8', '#808080',
-  '#b0b0b0', '#c8c8c8', '#e0e0e0', '#969696',
-  '#bcbcbc', '#6e6e6e'
+  '#6eb5d0', '#e8a070', '#80c080', '#b080d0',
+  '#e0c060', '#60c0c0', '#c09070', '#90a0b0',
+  '#d08080', '#8080d0'
 ]
 
 const total = computed(() => props.data.reduce((s, d) => s + d.value, 0))
@@ -167,11 +165,19 @@ svg { display: block; }
 .center-total {
   font-size: 18px;
   font-weight: 500;
-  fill: #fff;
+  fill: var(--text-primary);
   font-family: var(--font-mono);
 }
 .center-unit {
   font-size: 10px;
-  fill: rgba(255,255,255,0.4);
+  fill: var(--text-muted);
+}
+.pie-label-name {
+  fill: var(--text-primary);
+  font-size: 11px;
+}
+.pie-label-value {
+  fill: var(--text-muted);
+  font-size: 9px;
 }
 </style>

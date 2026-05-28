@@ -16,7 +16,7 @@ public class Shortcut extends BaseEntity {
     @Column(length = 500)
     private String url;
 
-    @Column(length = 50)
+    @Column(length = 500)
     private String icon;
 
     @Column(name = "sort_order")

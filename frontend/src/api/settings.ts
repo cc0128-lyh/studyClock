@@ -11,5 +11,6 @@ export const settingsApi = {
     const form = new FormData()
     form.append('file', file)
     return api.post('/settings/upload/avatar', form)
-  }
+  },
+  clearAll: () => api.delete('/data/clear-all')
 }

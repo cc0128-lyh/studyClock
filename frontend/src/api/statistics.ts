@@ -9,6 +9,9 @@ export interface SubjectBreakdownItem {
 export interface FocusSummary {
   totalSeconds: number
   sessionCount: number
+  dailySessionCount: number
+  weeklySessionCount: number
+  monthlySessionCount: number
   dailySeconds: number
   weeklySeconds: number
   monthlySeconds: number

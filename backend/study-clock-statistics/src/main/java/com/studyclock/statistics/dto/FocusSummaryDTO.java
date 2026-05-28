@@ -6,6 +6,9 @@ public class FocusSummaryDTO {
 
     private long totalSeconds;
     private int sessionCount;
+    private int dailySessionCount;
+    private int weeklySessionCount;
+    private int monthlySessionCount;
     private long dailySeconds;
     private long weeklySeconds;
     private long monthlySeconds;
@@ -15,6 +18,12 @@ public class FocusSummaryDTO {
     public void setTotalSeconds(long totalSeconds) { this.totalSeconds = totalSeconds; }
     public int getSessionCount() { return sessionCount; }
     public void setSessionCount(int sessionCount) { this.sessionCount = sessionCount; }
+    public int getDailySessionCount() { return dailySessionCount; }
+    public void setDailySessionCount(int dailySessionCount) { this.dailySessionCount = dailySessionCount; }
+    public int getWeeklySessionCount() { return weeklySessionCount; }
+    public void setWeeklySessionCount(int weeklySessionCount) { this.weeklySessionCount = weeklySessionCount; }
+    public int getMonthlySessionCount() { return monthlySessionCount; }
+    public void setMonthlySessionCount(int monthlySessionCount) { this.monthlySessionCount = monthlySessionCount; }
     public long getDailySeconds() { return dailySeconds; }
     public void setDailySeconds(long dailySeconds) { this.dailySeconds = dailySeconds; }
     public long getWeeklySeconds() { return weeklySeconds; }
